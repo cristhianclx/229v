@@ -1,0 +1,23 @@
+# https://www.python.org/downloads/
+
+# comandos
+
+# 1ra vez
+
+python -m venv .venv
+.venv\Scripts\activate.bat
+pip install -r requirements.txt --upgrade
+
+# 2da vez o +
+
+.venv\Scripts\activate.bat
+pip install -r requirements.txt --upgrade
+
+# utils
+
+pip install Flask
+pip freeze # ves lo que tienes instalado
+
+# flask
+
+flask --app main run --reload # correr Flask
