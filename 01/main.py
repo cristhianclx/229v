@@ -49,9 +49,9 @@ def login():
         user = raw.get("user") # raw["user"]
         password = raw.get("password")
         if user and password:
-            print(user)
-            print(password)
-            # es valido => "valid login"
+            for r in data:
+                if r["user"] == user and r["password"] == password:
+                    return "valid login"
             return "invalid login"
         else:
             return "missing data"
