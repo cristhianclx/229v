@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>User detail: {{ item.id }}</title>
+{% endblock %}
+
+{% block content %}
+<h1>User detail</h1>
+<hr>
+<a href="{{ url_for('users') }}" class="btn btn-primary">Return to user list</a>
+<hr>
+
+<div class="mb-3">
+    <label class="form-label">ID</label>
+    <input type="text" class="form-control" name="id" value="{{ item.id }}" disabled readonly>
+  </div>
+
+    <div class="mb-3">
+        <label class="form-label">First name</label>
+        <input type="text" class="form-control" name="first_name" value="{{ item.first_name }}" disabled readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Last name</label>
+        <input type="text" class="form-control" name="last_name" value="{{ item.last_name }}" disabled readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Age</label>
+        <input type="text" class="form-control" name="age" value="{{ item.age }}" disabled readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Country</label>
+        <input type="text" class="form-control" name="country" value="{{ item.country }}" disabled readonly>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Content</label>
+        {% if item.content %}
+        {{ item.content }}
+        {% endif %}
+      </div>
+{% endblock %}

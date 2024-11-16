@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Users</title>
+{% endblock %}
+
+{% block content %}
+<h1>Users</h1>
+<hr>
+<a href="{{ url_for('users_add') }}" class="btn btn-primary">Add user</a>
+<hr>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First name</th>
+        <th scope="col">Last name</th>
+        <th scope="col">Age</th>
+        <th scope="col">Country</th>
+        <th scope="col">Created at</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <th scope="row">{{ item.id }}</th>
+        <td>{{ item.first_name }}</td>
+        <td>{{ item.last_name }}</td>
+        <td>{{ item.age }}</td>
+        {% if item.country == "PE" %}
+        <td>🇵🇪</td>
+        {% else %}
+        <td>{{ item.country }}</td>
+        {% endif %}
+        <td>{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>
+            <a href="{{ url_for('users_by_id', id=item.id) }}" class="btn btn-primary">Details</a>
+            <a href="{{ url_for('users_edit_by_id', id=item.id) }}" class="btn btn-primary">Edit</a>
+            <a href="{{ url_for('users_delete_by_id', id=item.id) }}" class="btn btn-primary">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

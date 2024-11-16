@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Delete user: {{ item.id }}</title>
+{% endblock %}
+
+{% block content %}
+<h1>Delete user</h1>
+<hr>
+<a href="{{ url_for('users') }}" class="btn btn-primary">Return to user list</a>
+<hr>
+<form method="POST">
+    <h2>Are you sure you want to delete user {{ item.id }}: {{ item.first_name }} {{ item.last_name }}?</h2>
+    <button type="submit" class="btn btn-danger">Delete user</button>
+</form>
+{% endblock %}
