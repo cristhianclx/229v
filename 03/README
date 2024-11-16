@@ -27,3 +27,5 @@ flask --app main run --reload # correr Flask
 flask --app main db init # init database (1st time)
 flask --app main db migrate # create migration
 flask --app main db upgrade # apply migration
+
+flask --app main db downgrade # revert migration

@@ -21,14 +21,12 @@ class User(db.Model):
     last_name = db.Column(db.String(150))
     age = db.Column(db.Integer)
     bank = db.Column(db.String(10))
+    country = db.Column(db.String(15))
+    content = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
         return "<User {}>".format(self.id)
-
-
-# agregues el campo country al modelo user
-# agregues el campo content al modelo user
 
 
 class Message(db.Model):
