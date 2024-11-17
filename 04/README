@@ -50,3 +50,28 @@ flask --app main shell
 >>> user.age = 44
 >>> db.session.add(user)
 >>> db.session.commit()
+
+>>> from main import db, User
+>>> user = User.query.get(2)
+>>> db.session.delete(user)
+>>> db.session.commit()
+
+>>> from main import db, User, Message
+>>> user = User.query.get(1)
+>>> message = Message(title="A message", content="Content", user=user)
+>>> db.session.add(message)
+>>> db.session.commit()
+
+>>> from main import db, User, Message
+>>> user = User.query.get_or_404(1)
+>>> Message.query.filter_by(user = user).all()
+
+# heroku
+
+# install heroku-cli
+heroku login
+git init
+heroku create
+git add .
+git commit -m "message"
+git push heroku main # git push heroku master

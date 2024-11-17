@@ -36,6 +36,9 @@ class Message(db.Model):
     content = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", backref="user")
+
     def __repr__(self):
         return "<Message {}>".format(self.title)
 
@@ -108,4 +111,24 @@ def users_delete_by_id(id):
         return redirect(url_for('users'))
     
 
-# CRUD - messages
+@app.route("/users/<user_id>/messages/add", methods=["GET", "POST"])
+def users_by_id_add_message(user_id):
+    user = User.query.get_or_404(user_id)
+    if request.method == "GET":
+        return render_template("messages-add.html", user=user)
+    if request.method == "POST":
+        message = Message(
+            title=request.form["title"],
+            content=request.form["content"],
+            user=user,
+        )
+        db.session.add(message)
+        db.session.commit()
+        return render_template("messages-add.html", user=user, message="Message saved")
+    
+
+@app.route("/users/<user_id>/messages")
+def users_by_id_messages(user_id):
+    user = User.query.get_or_404(user_id)
+    items = Message.query.filter_by(user = user).all()
+    return render_template("messages.html", items=items, user=user)
