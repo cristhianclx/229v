@@ -41,12 +41,18 @@ class PokemonInfoResource(Resource):
     def get(self, id):
         data = requests.get("https://pokeapi.co/api/v2/pokemon/{}".format(id)).json()
         print(data)
+        forms = []
+        for i in data["forms"]:
+            forms.append(i["name"])
+        abilities = []
+        for i in data["abilities"]:
+            abilities.append(i["ability"]["name"])
         return {
             "id": id,
-            "abilities": [], # ["static", "lightning-rod"]
-            "forms": [], # ["pikachu"]
-            "height": "", # 4
-            "weight": "" # 60
+            "abilities": abilities,
+            "forms": forms,
+            "height": data["height"],
+            "weight": data["weight"]
         }
 
 
