@@ -32,6 +32,22 @@ class Message(db.Model):
         return "<Message {}>".format(self.id)
 
 
+class MessageSchema(ma.Schema):
+    class Meta:
+        model = Message
+        fields = (
+            "id",
+            "content",
+            "user_id",
+            "created_at"
+        )
+        datetimeformat = "%Y-%m-%d %H:%M:%S"
+
+
+message_schema = MessageSchema()
+messages_schema = MessageSchema(many = True)
+
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.json.get("username", None)
@@ -65,10 +81,16 @@ def private():
     }
 
 
-# 2 routes (jwt)
+@app.route("/messages")
+@jwt_required()
+def messages():
+    data = Message.query.all()
+    return messages_schema.dump(data)
 
-# /messages/ -> GET all messages
-# [{}, {}]
 
-# /me/ -> GET all messages for that user logged
-# [{}]
+@app.route("/me")
+@jwt_required()
+def me():
+    logged_username = get_jwt_identity()
+    data = Message.query.filter_by(user_id = logged_username).all()
+    return messages_schema.dump(data)
