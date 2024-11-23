@@ -16,15 +16,24 @@
                 e.preventDefault();
                 let user = $("#user").val()
                 let content = $("#content").val()
+                let feedback = $("#feedback").val()
+                let importance = $("#importance").val()
                 socket.emit("ws-messages", {
                     user: user,
                     content: content,
+                    feedback: feedback,
+                    importance: importance,
                 })
                 $("#content").val("").focus();
             })
         });
         socket.on("ws-messages-responses", function(msg) {
-            $("#messages").append("<p><b>" + msg.user + ":</b> " + msg.content + "</p>")
+            console.log(msg)
+            if (msg.is_important) {
+                $("#messages").append("<p style='color:red;'><b>" + msg.user + ":</b> " + msg.content + "</p>")
+            } else {
+                $("#messages").append("<p><b>" + msg.user + ":</b> " + msg.content + "</p>")
+            }
         })
     </script>
 </head>
@@ -33,14 +42,20 @@
     <hr>
     <form action="" method="POST" id="form">
         <input type="text" name="user" id="user" class="form-control" placeholder="User" />
-        <input type="content" name="content" id="content" class="form-control" placeholder="Content" />
+        <input type="text" name="content" id="content" class="form-control" placeholder="Content" />
+        <input type="text" name="feedback" id="feedback" class="form-control" placeholder="Feedback" />
+        <input type="text" name="importance" id="importance" class="form-control" placeholder="Importance" />
         <button type="submit" class="btn btn-info">Send</button>
     </form>
     <hr>
     <h2>Messages</h2>
     <div id="messages">
         {% for m in messages %}
-        <p><b>{{ m.user }}:</b> {{ m.content }}</p>
+           {% if m.importance == "high" or 'URGENT' in m.feedback %}
+           <p style="color:red;"><b>{{ m.user }}:</b> {{ m.content }}</p>
+           {% else %}
+           <p><b>{{ m.user }}:</b> {{ m.content }}</p>
+           {% endif %}
         {% endfor %}
     </div>
   </body>
