@@ -56,6 +56,39 @@ user_schema = UserSchema()
 users_schema = UserSchema(many = True)
 
 
+class MessageSimpleSchema(ma.Schema):
+    user = ma.Nested(UserSchema)
+    class Meta:
+        fields = (
+            "id",
+            "content",
+            "created_at",
+        )
+        model = Message
+        datetimeformat = "%Y-%m-%d %H:%M:%S"
+
+
+message_simple_schema = MessageSimpleSchema()
+messages_simple_schema = MessageSimpleSchema(many = True)
+
+
+class MessageSchema(ma.Schema):
+    user = ma.Nested(UserSchema)
+    class Meta:
+        fields = (
+            "id",
+            "content",
+            "created_at",
+            "user",
+        )
+        model = Message
+        datetimeformat = "%Y-%m-%d %H:%M:%S"
+
+
+message_schema = MessageSchema()
+messages_schema = MessageSchema(many = True)
+
+
 class PINGResource(Resource):
     def get(self):
         return {
@@ -121,15 +154,28 @@ class UserIDResource(Resource):
         return {}, 204
 
 
+class UserIDMessagesResource(Resource):
+    def get(self, id):
+        user = User.query.get_or_404(id)
+        messages = Message.query.filter_by(user = user).all()
+        return messages_simple_schema.dump(messages)
+
+
+class MessagesResource(Resource):
+    def get(self):
+        messages = Message.query.all()
+        return messages_schema.dump(messages)
+
+    def post(self):
+        data = request.get_json()
+        message = Message(**data)
+        db.session.add(message)
+        db.session.commit()
+        return message_schema.dump(message), 201
+
+
 api.add_resource(PINGResource, "/")
 api.add_resource(UsersResource, "/users")
 api.add_resource(UserIDResource, "/users/<id>")
-
-# /messages
-# GET: obtener todos los mensajes
-# POST: crear un nuevo mensaje
-
-# /messages/<id>
-# GET: data de un mensaje
-# PATCH: actualizar el mensaje
-# DELETE: borrar el mensaje
+api.add_resource(UserIDMessagesResource, "/users/<id>/messages")
+api.add_resource(MessagesResource, "/messages")

@@ -1,0 +1,38 @@
+# https://www.python.org/downloads/
+
+# comandos
+
+# 1ra vez
+
+python -m venv .venv
+.venv\Scripts\activate.bat
+pip install -r requirements.txt --upgrade
+
+# 2da vez o +
+
+.venv\Scripts\activate.bat
+pip install -r requirements.txt --upgrade
+
+# utils
+
+pip install Flask
+pip freeze # ves lo que tienes instalado
+
+# flask
+
+flask --app main run --reload # correr Flask
+
+# database
+
+flask --app main db init # init database (1st time)
+flask --app main db migrate # create migration
+flask --app main db upgrade # apply migration
+
+flask --app main db downgrade # revert migration
+
+flask --app main shell
+
+>>> from main import db, Message
+>>> message = Message(user_id="cristhian", content="CONTENT")
+>>> db.session.add(message)
+>>> db.session.commit()

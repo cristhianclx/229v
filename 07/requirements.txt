@@ -1,0 +1,6 @@
+flask==3.0.3
+flask-jwt-extended
+flask-marshmallow
+flask-migrate
+flask-restful
+flask-sqlalchemy
