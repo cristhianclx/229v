@@ -19,6 +19,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Participants</th>
+                <th scope="col">Max participants</th>
                 <th scope="col">Options</th>
             </tr>
         </thead>
@@ -28,6 +29,11 @@
                 <th scope="row">{{ r.room.id }}</th>
                 <td>{{ r.room.name }}</td>
                 <td>{{ r.participants }}</td>
+                {% if r.room.max_participants %}
+                <td>{{ r.room.max_participants }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
                 <td><a href="{{ url_for('rooms', id=r.room.id)}}" class="btn btn-info">JOIN</a></td>
             </tr>
             {% endfor %}

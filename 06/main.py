@@ -31,7 +31,7 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    
+
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref="user")
 
@@ -53,11 +53,12 @@ class UserSchema(ma.Schema):
 
 
 user_schema = UserSchema()
-users_schema = UserSchema(many = True)
+users_schema = UserSchema(many=True)
 
 
 class MessageSimpleSchema(ma.Schema):
     user = ma.Nested(UserSchema)
+
     class Meta:
         fields = (
             "id",
@@ -69,11 +70,12 @@ class MessageSimpleSchema(ma.Schema):
 
 
 message_simple_schema = MessageSimpleSchema()
-messages_simple_schema = MessageSimpleSchema(many = True)
+messages_simple_schema = MessageSimpleSchema(many=True)
 
 
 class MessageSchema(ma.Schema):
     user = ma.Nested(UserSchema)
+
     class Meta:
         fields = (
             "id",
@@ -86,15 +88,13 @@ class MessageSchema(ma.Schema):
 
 
 message_schema = MessageSchema()
-messages_schema = MessageSchema(many = True)
+messages_schema = MessageSchema(many=True)
 
 
 class PINGResource(Resource):
     def get(self):
-        return {
-            "status": "healthy"
-        }
-    
+        return {"status": "healthy"}
+
 
 class UsersResource(Resource):
     def get(self):
@@ -111,7 +111,7 @@ class UsersResource(Resource):
 
     def post(self):
         data = request.get_json()
-        user = User(**data) # User(name = data["name"], age=data["age"])
+        user = User(**data)  # User(name = data["name"], age=data["age"])
         db.session.add(user)
         db.session.commit()
         return user_schema.dump(user), 201
@@ -131,7 +131,7 @@ class UserIDResource(Resource):
         #     "name": user.name,
         #     "age": user.age
         # }
-    
+
     def patch(self, id):
         user = User.query.get_or_404(id)
         data = request.get_json()
@@ -146,7 +146,7 @@ class UserIDResource(Resource):
         #     "name": user.name,
         #     "age": user.age
         # }
-    
+
     def delete(self, id):
         user = User.query.get_or_404(id)
         db.session.delete(user)
@@ -157,7 +157,7 @@ class UserIDResource(Resource):
 class UserIDMessagesResource(Resource):
     def get(self, id):
         user = User.query.get_or_404(id)
-        messages = Message.query.filter_by(user = user).all()
+        messages = Message.query.filter_by(user=user).all()
         return messages_simple_schema.dump(messages)
 
 

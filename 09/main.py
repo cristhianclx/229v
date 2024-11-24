@@ -18,6 +18,7 @@ socketio = SocketIO(app)
 class Room(db.Model):
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String(100))
+    max_participants = db.Column(db.Integer, default=100)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     messages = db.relationship("Message", back_populates="room")
@@ -60,6 +61,7 @@ def rooms_create():
         room = Room(
             id = request.form["id"],
             name = request.form["name"],
+            max_participants = request.form.get("max_participants", 100)
         )
         db.session.add(room)
         db.session.commit()
@@ -69,8 +71,11 @@ def rooms_create():
 @app.route("/rooms/<id>")
 def rooms(id):
     room = Room.query.filter_by(id = id).first()
-    messages = Message.query.filter_by(room = room)
     participants = len(db.session.query(Message.nickname, db.func.count(Message.nickname)).filter(Message.room_id == room.id).group_by(Message.nickname).all())
+    if room.max_participants <= participants:
+        print("max participants: {}, participants: {}".format(room.max_participants, participants))
+        return redirect(url_for('index'))
+    messages = Message.query.filter_by(room = room)
     return render_template("room.html", room=room, messages=messages)
 
 
@@ -80,7 +85,3 @@ def handle_ws_messages(data):
     db.session.add(message)
     db.session.commit()
     socketio.emit("ws-messages-{}".format(message.room.id), data)
-
-
-# rooms - add column max_participants, default=10
-# when you want to enter or join a room, if max_participants >= participants
