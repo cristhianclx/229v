@@ -57,8 +57,6 @@ users_schema = UserSchema(many=True)
 
 
 class MessageSimpleSchema(ma.Schema):
-    user = ma.Nested(UserSchema)
-
     class Meta:
         fields = (
             "id",
